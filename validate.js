@@ -8,7 +8,7 @@
  * Exit code 1 on any hard error. Run: `node validate.js`
  *
  * A note on what this can and cannot see. en.json is the source of truth *here*, but
- * the app's real dictionary is src/i18n/{en-base,en}.ts in Stredio-Web — this repo has
+ * the app's real dictionary is src/i18n/{en-base,en}.ts in Groloo-Web — this repo has
  * no access to it. So en.json can silently fall behind the app: keys ship, translators
  * never learn they exist, and every language quietly renders them in English. That is
  * exactly what happened (en.json sat 95 keys behind), and the only symptom visible from
@@ -17,7 +17,7 @@
  * almost never the language's fault. See the diagnosis under "unknown key(s)" below.
  *
  * To resync: regenerate en.json from the app's EN table ({ ...EN_BASE, ...SEED }), then
- * bump TVER in Stredio-Web/src/i18n/i18n.tsx or jsDelivr serves the old files for ~12h.
+ * bump TVER in Groloo-Web/src/i18n/i18n.tsx or jsDelivr serves the old files for ~12h.
  */
 const fs = require('fs');
 const path = require('path');
@@ -53,7 +53,7 @@ for (const lang of manifest.languages) {
     console.error(`✗ ${lang.file}: ${extra.length} key(s) that en.json has never heard of:`, extra.slice(0, 10));
     console.error(`    Before "fixing" ${lang.file}: a translator cannot invent keys, so these almost`);
     console.error(`    certainly came from the app and en.json is STALE. Check whether the app calls`);
-    console.error(`    them (grep "t('<key>'" in Stredio-Web/src). If it does, resync en.json — do NOT`);
+    console.error(`    them (grep "t('<key>'" in Groloo-Web/src). If it does, resync en.json — do NOT`);
     console.error(`    delete them from ${lang.file}, that would throw away real translations.`);
     hardErrors++;
   }

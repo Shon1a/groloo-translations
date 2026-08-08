@@ -1,6 +1,6 @@
-# stredio-translations
+# groloo-translations
 
-UI translation strings for [STREDIO](https://github.com/Shon1a/Stredio) — one JSON file per language, loaded by the site at runtime. English ships inline as an offline fallback; other languages load on demand.
+UI translation strings for [GROLOO](https://github.com/Shon1a/Groloo-Web) — one JSON file per language, loaded by the site at runtime. English ships inline as an offline fallback; other languages load on demand.
 
 ## Structure
 

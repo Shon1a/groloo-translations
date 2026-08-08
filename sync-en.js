@@ -2,7 +2,7 @@
 /* Regenerates en.json from the app's dictionary, so it can't silently fall behind.
  *
  * WHY THIS EXISTS
- * There are two English lists: the app's (Stredio-Web/src/i18n/{en-base,en}.ts, which
+ * There are two English lists: the app's (Groloo-Web/src/i18n/{en-base,en}.ts, which
  * is what users actually see) and this repo's en.json (which is what translators read
  * and translate). Nothing linked them, so shipping a feature added strings to the first
  * and not the second — and a translator cannot translate a string they were never shown.
@@ -23,21 +23,37 @@
  * USAGE
  *   node sync-en.js           add missing keys to en.json; report rewordings
  *   node sync-en.js --check   exit 1 if keys are missing (what CI runs)
- *   node sync-en.js --local ../Stredio-Web   read from a local checkout instead of GitHub
+ *   node sync-en.js --local ../Groloo-Web   read from a local checkout instead of GitHub
+ *   node sync-en.js --allow-drop 24        let one run remove that many retired keys
  *
  * Existing keys keep their position so the diff stays readable; new keys are appended.
+ * A key the app no longer has is DROPPED, because en.json is a mirror and a string no
+ * screen can request is a string nobody should be asked to translate — but never more
+ * than a handful at a time without a human saying so, see checkSane().
  */
 const fs = require('fs');
 const path = require('path');
 
-const RAW = 'https://raw.githubusercontent.com/Shon1a/Stredio-Web/main/src/i18n/';
+/* Named for the repo as it stands, not as it was. The rename from Stredio-Web left a
+ * redirect that raw.githubusercontent still follows, so the old URL "worked" — right up
+ * until anyone creates a repo under the vacated name, at which point this quietly starts
+ * reading a stranger's file and MIN_KEYS is the only thing between that and en.json. */
+const RAW = 'https://raw.githubusercontent.com/Shon1a/Groloo-Web/main/src/i18n/';
 const FILES = ['en-base.ts', 'en.ts'];         // merge order: { ...EN_BASE, ...SEED }
 const MIN_KEYS = 400;                          // sanity floor — see checkSane()
+const MAX_DROP = 20;                           // default ceiling on removals — see checkSane()
 
 const args = process.argv.slice(2);
 const check = args.includes('--check');
 const localIdx = args.indexOf('--local');
 const localDir = localIdx >= 0 ? args[localIdx + 1] : null;
+/* The drop guard's own advice used to be "raise this limit for one run", which meant
+ * editing a tracked file and remembering to put it back. This is that, as a flag. */
+const dropIdx = args.indexOf('--allow-drop');
+const dropArg = dropIdx >= 0 ? Number(args[dropIdx + 1]) : MAX_DROP;
+// A bare `--allow-drop` with no number parses as NaN, and `n > NaN` is false for every n —
+// so a typo would silently disable the guard entirely. Fall back to the default instead.
+const maxDrop = Number.isInteger(dropArg) && dropArg >= 0 ? dropArg : MAX_DROP;
 
 /* Parse `"key": "value"` / `'key': 'value'` / `'key': `value`` pairs out of a TS module.
  * Regex rather than a TS parser to keep this dependency-free; checkSane() below is what
@@ -72,10 +88,11 @@ function checkSane(en, sources) {
   }
   const cur = fs.existsSync(EN_JSON) ? JSON.parse(fs.readFileSync(EN_JSON, 'utf8')) : {};
   const lost = Object.keys(cur).filter(k => !(k in en));
-  if (lost.length > 20) {
+  if (lost.length > maxDrop) {
     console.error(`✗ regenerating would DROP ${lost.length} keys currently in en.json, e.g.`, lost.slice(0, 8));
-    console.error(`  That is a lot to lose in one go. Either the app removed them on purpose`);
-    console.error(`  (then raise this limit for one run) or the parser broke. REFUSING.`);
+    console.error(`  That is a lot to lose in one go. Either the parser broke, or the app removed`);
+    console.error(`  them on purpose — check with: grep -rn "t('<key>'" ../Groloo-Web/src`);
+    console.error(`  If they really are gone, rerun once with --allow-drop ${lost.length}. REFUSING.`);
     process.exit(2);
   }
   return lost;
@@ -107,7 +124,10 @@ const EN_JSON = path.join(__dirname, 'en.json');
   console.log(`app EN: ${Object.keys(EN).length} keys (${FILES.join(' + ')})`);
   console.log(`en.json: ${Object.keys(cur).length} -> ${Object.keys(next).length}`);
   if (added.length) console.log(`  + ${added.length} added`);
-  if (lost.length)  console.log(`  - ${lost.length} in en.json but no longer in the app (kept)`);
+  // "(kept)" is what this used to say, and it was not true: `next` is built from the keys
+  // the app still has, so a lost key is dropped. Reporting the opposite of what the file
+  // does is worse than not reporting it — the guard above is what makes the drop safe.
+  if (lost.length)  console.log(`  - ${lost.length} dropped (in en.json, no longer in the app)`);
 
   if (reworded.length && check) {
     // One line in CI. This is a standing editorial difference, not a regression, and

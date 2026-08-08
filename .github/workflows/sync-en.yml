@@ -1,6 +1,6 @@
 # Keeps en.json in step with the app's English, so it can't silently fall behind again.
 #
-# The problem this exists for: the app's dictionary (Stredio-Web/src/i18n/{en-base,en}.ts)
+# The problem this exists for: the app's dictionary (Groloo-Web/src/i18n/{en-base,en}.ts)
 # is what users see; en.json is what translators read. Nothing linked them, so shipping a
 # feature added strings to the first and not the second — and a translator cannot translate
 # a string they were never shown. en.json drifted 95 keys behind before anyone noticed.
@@ -9,7 +9,7 @@
 # trigger this repo), and on demand. It only ADDS missing keys; rewording an existing
 # string is an editorial call and is reported, never applied — see sync-en.js.
 #
-# No secrets: Stredio-Web is public so reading it is a plain HTTP GET, and committing back
+# No secrets: Groloo-Web is public so reading it is a plain HTTP GET, and committing back
 # to THIS repo uses the GITHUB_TOKEN every workflow already gets.
 
 name: sync en.json with the app
