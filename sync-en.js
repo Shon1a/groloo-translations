@@ -25,6 +25,7 @@
  *   node sync-en.js --check   exit 1 if keys are missing (what CI runs)
  *   node sync-en.js --local ../Groloo-Web   read from a local checkout instead of GitHub
  *   node sync-en.js --allow-drop 24        let one run remove that many retired keys
+ *   node sync-en.js --apply-rewordings     adopt the app's wording for keys we already have
  *
  * Existing keys keep their position so the diff stays readable; new keys are appended.
  * A key the app no longer has is DROPPED, because en.json is a mirror and a string no
@@ -49,6 +50,9 @@ const localIdx = args.indexOf('--local');
 const localDir = localIdx >= 0 ? args[localIdx + 1] : null;
 /* The drop guard's own advice used to be "raise this limit for one run", which meant
  * editing a tracked file and remembering to put it back. This is that, as a flag. */
+/* Adopt the app's wording for keys that already exist here. Off by default and never set by
+ * CI — see where it is used for why it is a flag rather than the behaviour. */
+const applyReword = args.includes('--apply-rewordings');
 const dropIdx = args.indexOf('--allow-drop');
 const dropArg = dropIdx >= 0 ? Number(args[dropIdx + 1]) : MAX_DROP;
 // A bare `--allow-drop` with no number parses as NaN, and `n > NaN` is false for every n —
@@ -107,14 +111,18 @@ const EN_JSON = path.join(__dirname, 'en.json');
   const lost = checkSane(EN, FILES);
 
   const cur = fs.existsSync(EN_JSON) ? JSON.parse(fs.readFileSync(EN_JSON, 'utf8')) : {};
-  // Existing keys keep their position AND their value (see "won't touch" above);
-  // only genuinely-new keys are appended, with the app's English.
+  const reworded = Object.keys(cur).filter(k => k in EN && cur[k] !== EN[k]);
+  /* Existing keys keep their position, and their VALUE unless a human asked otherwise (see
+   * "won't touch" above); only genuinely-new keys are appended, with the app's English.
+   * `--apply-rewordings` is that human asking. It does not weaken the rule it suspends: the
+   * rule is that a script must not pick a side in a privacy policy on its own, and a flag
+   * typed by someone who has read the diff is not the script deciding. CI never passes it,
+   * so nothing here is ever rewritten automatically. */
   const next = {};
-  for (const k of Object.keys(cur)) if (k in EN) next[k] = cur[k];
+  for (const k of Object.keys(cur)) if (k in EN) next[k] = applyReword ? EN[k] : cur[k];
   for (const k of Object.keys(EN)) if (!(k in next)) next[k] = EN[k];
 
   const added = Object.keys(next).filter(k => !(k in cur));
-  const reworded = Object.keys(cur).filter(k => k in EN && cur[k] !== EN[k]);
   const body = JSON.stringify(next, null, 2) + '\n';
   // Compare with line endings normalised: git checks this file out as CRLF on Windows,
   // and we always emit LF, so a raw compare would report "changed" on every single run.
@@ -129,7 +137,16 @@ const EN_JSON = path.join(__dirname, 'en.json');
   // does is worse than not reporting it — the guard above is what makes the drop safe.
   if (lost.length)  console.log(`  - ${lost.length} dropped (in en.json, no longer in the app)`);
 
-  if (reworded.length && check) {
+  if (reworded.length && applyReword) {
+    // Every one of them, not the first six: this is the run that CHANGES them, so the list is
+    // the record of what was changed and a truncated one is no record at all.
+    console.log(`\n↻ ${reworded.length} key(s) rewritten to the app's wording:`);
+    for (const k of reworded) {
+      console.log(`    ${k}`);
+      console.log(`      was: ${JSON.stringify(cur[k]).slice(0, 72)}`);
+      console.log(`      now: ${JSON.stringify(EN[k]).slice(0, 72)}`);
+    }
+  } else if (reworded.length && check) {
     // One line in CI. This is a standing editorial difference, not a regression, and
     // twenty lines of it on every run is how a check gets tuned out.
     console.log(`\n⚠ ${reworded.length} key(s) are worded differently here than in the app` +
