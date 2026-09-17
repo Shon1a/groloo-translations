@@ -678,5 +678,6 @@
   "addons.hide": "Hide",
   "addons.unhide": "Unhide",
   "addons.hidden_tag": "Hidden",
-  "blocks.hidden_note": "Hidden by you. Its catalogs stay out of Home, Search and Browse until you unhide it."
+  "blocks.hidden_note": "Hidden by you. Its catalogs stay out of Home, Search and Browse until you unhide it.",
+  "player.vol_ios": "Volume: use the side buttons"
 }
