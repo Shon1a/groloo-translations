@@ -767,5 +767,18 @@
   "postplay.back_to_credits": "Back to credits",
   "postplay.watch": "Watch",
   "postplay.close": "Close",
-  "settings.postplay": "Show trailers and picks when a film ends"
+  "settings.postplay": "Show trailers and picks when a film ends",
+  "ctl.next_a": "Next episode",
+  "ctl.subtitles_a": "Subtitles",
+  "menu.audio": "Audio",
+  "menu.sources": "Sources",
+  "menu.settings": "Settings",
+  "menu.on": "On",
+  "menu.audio_default": "Default",
+  "menu.source_server": "Needs the streaming server",
+  "player.ch_intro": "Intro",
+  "player.ch_credits": "Credits",
+  "player.ch_recap": "Recap",
+  "player.ch_preview": "Preview",
+  "player.skip_recap": "Skip Recap"
 }
