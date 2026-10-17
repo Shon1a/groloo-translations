@@ -780,5 +780,10 @@
   "player.ch_credits": "Credits",
   "player.ch_recap": "Recap",
   "player.ch_preview": "Preview",
-  "player.skip_recap": "Skip Recap"
+  "player.skip_recap": "Skip Recap",
+  "attrib.skip_head": "Skip intro & credits markers",
+  "attrib.skip_body": "Where an episode’s intro, recap and credits are comes from community databases, checked against the length of the file you are playing: SkipDB, TheIntroDB, IntroDB and AniSkip, with OpenSubtitles subtitles as a last resort for the credits.",
+  "menu.audio_tracks": "Audio tracks",
+  "player.watch_credits": "Watch Credits",
+  "settings.sub_italic": "Italic subtitles"
 }
