@@ -790,5 +790,9 @@
   "tv.resume": "Resume",
   "tv.official_trailer": "Official Trailer",
   "tv.watch_trailer": "Watch the trailer: {title}",
-  "tv.more_like_this": "More Like This"
+  "tv.more_like_this": "More Like This",
+  "player.zoom_fill": "Zoomed to fill",
+  "player.zoom_original": "Original",
+  "search.key_space": "Space",
+  "search.key_delete": "Delete"
 }
