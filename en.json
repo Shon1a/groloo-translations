@@ -794,5 +794,14 @@
   "player.zoom_fill": "Zoomed to fill",
   "player.zoom_original": "Original",
   "search.key_space": "Space",
-  "search.key_delete": "Delete"
+  "search.key_delete": "Delete",
+  "tv.episodes_more": "Episodes & More",
+  "tv.trailers_more": "Trailers & More",
+  "tv.sources": "Sources",
+  "tv.video_one": "1 video",
+  "tv.videos_count": "{n} videos",
+  "tv.match": "{n}% Match",
+  "tv.titles_count": "{n} titles",
+  "tv.cast": "Cast",
+  "tv.creators": "Creators"
 }
