@@ -764,7 +764,6 @@
   "sec.top_picks": "Today’s Top Picks for You",
   "postplay.label": "Up next",
   "postplay.because": "More like {title}",
-  "postplay.back_to_credits": "Back to credits",
   "postplay.watch": "Watch",
   "postplay.close": "Close",
   "settings.postplay": "Show trailers and picks when a film ends",
@@ -803,5 +802,6 @@
   "tv.match": "{n}% Match",
   "tv.titles_count": "{n} titles",
   "tv.cast": "Cast",
-  "tv.creators": "Creators"
+  "tv.creators": "Creators",
+  "player.see_more": "See More"
 }
