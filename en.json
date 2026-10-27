@@ -803,5 +803,12 @@
   "tv.titles_count": "{n} titles",
   "tv.cast": "Cast",
   "tv.creators": "Creators",
-  "player.see_more": "See More"
+  "player.see_more": "See More",
+  "tv.trailer_soon": "Trailer starts in {n}",
+  "tv.sound_hint_kicker": "Trailer sound",
+  "tv.sound_hint_title": "Press {key} for sound",
+  "tv.sound_hint_sub": "Press it again to mute",
+  "tv.sound_hint_on": "Sound on",
+  "tv.sound_hint_off": "Sound off",
+  "tv.red_button": "the red button"
 }
