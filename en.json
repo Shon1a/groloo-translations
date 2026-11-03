@@ -811,5 +811,6 @@
   "tv.sound_hint_on": "Sound on",
   "tv.sound_hint_off": "Sound off",
   "tv.red_button": "the red button",
-  "nav.prime_test": "Prime"
+  "nav.prime_test": "Prime",
+  "pv.holdForTrailer": "Hold select for trailer"
 }
